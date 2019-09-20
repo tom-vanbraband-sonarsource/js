@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.4
+  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.5
 jobs:
   hello-not-node:
     docker:
