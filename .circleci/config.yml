@@ -4,9 +4,9 @@ jobs:
     executor: sonar/default
     steps:
     - checkout
-    - sonar
+    - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/sonarcloud@dev:0.0.5
+  sonar: tom-vanbraband-sns/sonarcloud@dev:0.0.6
 workflows:
   version: 2
   main:
