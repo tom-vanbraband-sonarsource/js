@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hello: namespace/orb@dev:0.0.1
+  hello: tom-vanbraband-sns/hello-world@dev:0.0.1
 
 workflows:
   hello-workflow:
