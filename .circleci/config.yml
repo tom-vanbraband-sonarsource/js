@@ -1,10 +1,11 @@
-version: 2.1
-orbs:
-  sns: tom-vanbraband-sns/hello-world@dev:0.0.5
 jobs:
   build:
     docker:
-      - image: alpine:3.7
+      - image: 'circleci/node:4.8.2'
     steps:
       - checkout
-      - sns/ls
+      - run: npm install -q
+      - sns/scan
+orbs:
+  sns: tom-vanbraband-sns/hello-world@dev:0.0.5
+version: 2.1
