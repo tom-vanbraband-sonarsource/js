@@ -13,7 +13,7 @@ workflows:
   main:
     jobs:
       - hello-orb/show-version
-      - hello-world/ls
+      - hello-orb/ls
       - hello-not-node:
           requires: 
             - hello-orb/show-version
