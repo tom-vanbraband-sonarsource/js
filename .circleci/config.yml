@@ -8,7 +8,7 @@ orbs:
   sonar: tom-vanbraband-sns/hello-world@dev:0.0.5
 version: 2.1
 workflows:
+  version: 2
   main:
     jobs:
-    - build:
-      context: test
+      - build
