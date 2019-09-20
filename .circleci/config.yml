@@ -1,13 +1,12 @@
 version: 2.1
 orbs:
-  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.3
+  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.4
 jobs:
   hello-not-node:
     docker:
       - image: alpine:3.7
     steps:
       - run:
-          name: Hello World
           command: |
             node -v
 workflows:
