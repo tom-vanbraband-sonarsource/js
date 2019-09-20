@@ -1,10 +1,13 @@
 jobs:
   build:
-    docker:
-      - image: 'circleci/node:4.8.2'
+    executor: sonar/default
     steps:
-      - checkout
-      - sns/scan
+    - checkout
+    - sonar/scan
 orbs:
-  sns: tom-vanbraband-sns/hello-world@dev:0.0.5
+  sonar: tom-vanbraband-sns/hello-world@dev:0.0.5
 version: 2.1
+workflows:
+  main:
+    jobs:
+    - build
