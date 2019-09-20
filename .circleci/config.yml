@@ -1,6 +1,10 @@
 version: 2.1
 
 jobs:
+  hello-node:
+    executor: hello-orb/default
+    steps:
+      - hello-orb/show-version
   hello-not-node:
     docker:
       - image: alpine:3.7
@@ -10,12 +14,12 @@ jobs:
           command: |
             node -v
 orbs:
-  hello: tom-vanbraband-sns/hello-world@dev:0.0.3
+  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.3
 
 workflows:
   hello-workflow:
     jobs:
-      - hello/show-version
+      - hello-node
       - hello-not-node:
           requires: 
-            - hello/show-version
+            - hello-node
