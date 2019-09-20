@@ -6,7 +6,7 @@ jobs:
     - checkout
     - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/sonarcloud@dev:0.0.2
+  sonar: tom-vanbraband-sns/sonarcloud@dev:0.0.3
 workflows:
   version: 2
   main:
