@@ -7,6 +7,9 @@ jobs:
       - hello-world/hello-world
       - hello-world/hello-world:
         key: Everyone
-
-  orbs:
-    hello-world: tom-vanbraband-sns/hello-world@dev:first
+orbs:
+  hello-world: tom-vanbraband-sns/hello-world@dev:first
+workflows:
+  main:
+    jobs:
+      - build
