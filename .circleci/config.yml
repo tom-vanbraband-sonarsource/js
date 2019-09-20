@@ -4,7 +4,6 @@ jobs:
       - image: 'circleci/node:4.8.2'
     steps:
       - checkout
-      - run: npm install -q
       - sns/scan
 orbs:
   sns: tom-vanbraband-sns/hello-world@dev:0.0.5
