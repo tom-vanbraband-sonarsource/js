@@ -1,14 +1,15 @@
+version: 2.1
 jobs:
-  build:
+  scan:
     executor: sonar/default
     steps:
     - checkout
     - sonar/scan
 orbs:
   sonar: tom-vanbraband-sns/hello-world@dev:0.0.5
-version: 2.1
 workflows:
   version: 2
   main:
     jobs:
-      - build
+      - scan:
+          context: test
