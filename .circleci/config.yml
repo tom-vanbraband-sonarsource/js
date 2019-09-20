@@ -1,8 +1,9 @@
 version: 2.1
-
+orbs:
+  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.3
 jobs:
   hello-node:
-    executor: hello-orb/default
+    executor: hello-orb
     steps:
       - hello-orb/show-version
   hello-not-node:
@@ -13,11 +14,8 @@ jobs:
           name: Hello World
           command: |
             node -v
-orbs:
-  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.3
-
 workflows:
-  hello-workflow:
+  main:
     jobs:
       - hello-node
       - hello-not-node:
