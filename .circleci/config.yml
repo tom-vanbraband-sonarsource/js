@@ -1,10 +1,10 @@
 version: 2.1
 orbs:
-  hello-orb: tom-vanbraband-sns/hello-world@dev:0.0.5
+  sns: tom-vanbraband-sns/hello-world@dev:0.0.5
 jobs:
   build:
     docker:
       - image: alpine:3.7
     steps:
       - checkout
-      - hello-orb/ls
+      - sns/ls
