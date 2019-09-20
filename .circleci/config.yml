@@ -5,7 +5,7 @@ jobs:
       - image: alpine:3.7
     steps:
       - hello-world/hello-world
-      - hello-world/hello-world
+      - hello-world/hello-world:
         key: Everyone
 
   orbs:
