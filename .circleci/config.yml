@@ -1,5 +1,14 @@
 version: 2.1
 
+jobs:
+  hello-not-node:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - run:
+          name: Hello World
+          command: |
+            node -v
 orbs:
   hello: tom-vanbraband-sns/hello-world@dev:0.0.3
 
@@ -7,4 +16,6 @@ workflows:
   hello-workflow:
     jobs:
       - hello/show-version
-      - hello/ls
+      - hello-not-node:
+          requires: 
+            - hello/show-version
