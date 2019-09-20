@@ -1,9 +1,10 @@
 version: 2.1
 
 orbs:
-  hello: tom-vanbraband-sns/hello-world@dev:0.0.1
+  hello: tom-vanbraband-sns/hello-world@dev:0.0.3
 
 workflows:
   hello-workflow:
     jobs:
-      - hello/hello-build
+      - hello/show-version
+      - hello/ls
