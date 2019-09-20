@@ -1,15 +1,9 @@
 version: 2.1
-jobs:
-  build:
-    docker:
-      - image: alpine:3.7
-    steps:
-      - hello-world/hello-world
-      - hello-world/hello-world:
-        key: Everyone
+
 orbs:
-  hello-world: tom-vanbraband-sns/hello-world@dev:first
+  hello: namespace/orb@dev:0.0.1
+
 workflows:
-  main:
+  hello-workflow:
     jobs:
-      - build
+      - hello/hello-build
