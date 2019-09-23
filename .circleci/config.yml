@@ -6,7 +6,7 @@ jobs:
     - checkout
     - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/sonarcloud-remote-docker@dev:0.0.19
+  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.1
 workflows:
   version: 2
   main:
