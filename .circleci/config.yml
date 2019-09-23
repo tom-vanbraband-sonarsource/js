@@ -7,7 +7,7 @@ jobs:
     - checkout
     - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.13
+  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.14
 workflows:
   version: 2
   main:
