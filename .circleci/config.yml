@@ -5,8 +5,6 @@ jobs:
       - image: 'circleci/node:4.8.2'
     steps:
     - checkout
-    - run:
-        command: npm install
     - sonar/analyze
 orbs:
   sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.16
