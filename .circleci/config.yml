@@ -2,12 +2,13 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: 'alpine:latest'
+      - image: 'circleci/node:4.8.2'
     steps:
     - checkout
+    - npm install
     - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.14
+  sonar: tom-vanbraband-sns/scanner-standard@dev:0.0.1
 workflows:
   version: 2
   main:
