@@ -1,12 +1,11 @@
 version: 2.1
 jobs:
   build:
-    macos:
-      xcode: "9.0"
+    docker:
+      - image: 'node:latest'
     steps:
     - checkout
-    - sonar/analyze:
-        os: macosx
+    - sonar/analyze
 orbs:
   sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.29
 workflows:
@@ -15,9 +14,5 @@ workflows:
     jobs:
       - build:
           context: test
-
-
-
-
 
 
