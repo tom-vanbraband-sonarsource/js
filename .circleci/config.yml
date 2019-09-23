@@ -9,7 +9,7 @@ jobs:
         command: npm install
     - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.15
+  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.16
 workflows:
   version: 2
   main:
