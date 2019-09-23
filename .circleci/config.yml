@@ -8,7 +8,7 @@ jobs:
     - sonar/analyze:
         os: macosx
 orbs:
-  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.25
+  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.26
 workflows:
   version: 2
   main:
