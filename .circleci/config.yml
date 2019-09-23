@@ -13,4 +13,4 @@ workflows:
   main:
     jobs:
       - build:
-          environment: SONAR_TOKEN=
+          context: test
