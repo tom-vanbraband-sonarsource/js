@@ -1,13 +1,13 @@
 version: 2.1
 jobs:
   build:
-    docker:
-      - image: 'circleci/node:4.8.2'
+    macos:
+      xcode: "9.0"
     steps:
     - checkout
     - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.21
+  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.22
 workflows:
   version: 2
   main:
