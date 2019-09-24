@@ -5,8 +5,7 @@ jobs:
       image: node:latest
     steps:
     - checkout
-    - sonar/analyze:
-        os: macosx
+    - sonar/analyze
 orbs:
   sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.37
 workflows:
