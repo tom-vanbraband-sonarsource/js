@@ -5,18 +5,15 @@ jobs:
       xcode: "9.0"
     steps:
     - checkout
-    - sonar/analyze:
-        os: macosx
+    - sonar/analyze
 orbs:
-  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.30
+  sonar: tom-vanbraband-sns/scanner-no-docker@dev:0.0.31
 workflows:
   version: 2
   main:
     jobs:
       - build:
           context: test
-
-
 
 
 
