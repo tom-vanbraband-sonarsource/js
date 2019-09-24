@@ -1,8 +1,8 @@
 version: 2.1
 jobs:
   build:
-    macos:
-      xcode: "9.0"
+    docker:
+      image: node:latest
     steps:
     - checkout
     - sonar/analyze:
