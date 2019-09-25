@@ -14,7 +14,7 @@ workflows:
   main:
     jobs:
       - build:
-          context: test
+          context: sonarcloud
 
 
 
