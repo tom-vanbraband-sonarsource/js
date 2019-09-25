@@ -5,7 +5,7 @@ jobs:
       xcode: "10.0.0"
     steps:
     - checkout
-    - sonar/analyze:
+    - sonar/scan:
         os: macosx
 orbs:
   sonar: sonarsource/sonarcloud@dev:alpha
