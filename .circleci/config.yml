@@ -5,8 +5,7 @@ jobs:
       - image: node:latest
     steps:
     - checkout
-    - sonar/scan:
-        os: macosx
+    - sonar/scan
 orbs:
   sonar: sonarsource/sonarcloud@dev:alpha
 workflows:
