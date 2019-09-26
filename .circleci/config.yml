@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: node:latest
+      - image: circleci/openjdk:latest
     steps:
     - checkout
     - sonar/scan
@@ -14,4 +14,3 @@ workflows:
     jobs:
       - build:
           context: sonarcloud
-          
