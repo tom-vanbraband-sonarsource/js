@@ -1,8 +1,8 @@
 version: 2.1
 jobs:
   build:
-    macos:
-      xcode: "10.0.0"
+    docker:
+      image: node:latest
     steps:
     - checkout
     - sonar/scan:
@@ -15,4 +15,3 @@ workflows:
     jobs:
       - build:
           context: sonarcloud
-          
