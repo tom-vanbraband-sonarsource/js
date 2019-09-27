@@ -1,8 +1,8 @@
 version: 2.1
 jobs:
   build:
-    docker:
-      - image: python:latest
+    macox:
+      - xcode: "10.0.0"
     steps:
     - checkout
     - sonar/scan:
