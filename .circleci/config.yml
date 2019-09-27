@@ -6,6 +6,7 @@ jobs:
     steps:
     - checkout
     - sonar/scan:
+        macos: true
         cache_version: 2
 orbs:
   sonar: sonarsource/sonarcloud@dev:alpha
