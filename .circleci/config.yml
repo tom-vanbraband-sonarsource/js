@@ -4,8 +4,8 @@ jobs:
     docker:
       - image: node:latest
     steps:
-    - checkout
-    - sonar/scan:
+      - checkout
+      - sonar/scan:
 orbs:
   sonar: sonarsource/sonarcloud@dev:alpha-ngrok
 workflows:
