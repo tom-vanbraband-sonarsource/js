@@ -1,15 +1,13 @@
 version: 2.1
 jobs:
   build:
-    macos:
-      xcode: "10.0.0"
+    docker:
+      - image: node:latest
     steps:
     - checkout
     - sonar/scan:
-        macos: true
-        cache_version: 2
 orbs:
-  sonar: sonarsource/sonarcloud@dev:alpha
+  sonar: sonarsource/sonarcloud@dev:alpha-ngrok
 workflows:
   main:
     jobs:
