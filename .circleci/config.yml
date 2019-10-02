@@ -6,10 +6,11 @@ jobs:
       - image: node:latest
     steps:
       - checkout
-      - sonarcloud/scan
+      - sonarcloud/scan:
+          - cache_version: 1544451
 
 orbs:
-  sonarcloud: sonarsource/sonarcloud@dev:alpha-ngrok
+  sonarcloud: sonarsource/sonarcloud@dev:alpha-dogfood
 
 workflows:
   main:
