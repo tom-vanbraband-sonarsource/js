@@ -7,10 +7,10 @@ jobs:
     steps:
       - checkout
       - sonarcloud/scan:
-          cache_version: 15445844554
+          cache_version: 54645
 
 orbs:
-  sonarcloud: sonarsource/sonarcloud@dev:alpha-dogfood
+  sonarcloud: sonarsource/sonarcloud@dev:alpha
 
 workflows:
   main:
