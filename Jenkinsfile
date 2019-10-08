@@ -3,6 +3,7 @@ node {
     git 'https://github.com/tom-vanbraband-sonarsource/js-dummy-project.git'
   }
   stage('SonarQube analysis') {
+    def scannerHome = tool 'SonarScanner 4.0';
     withSonarQubeEnv('SonarCloud') {
       sh "${scannerHome}/bin/sonar-scanner"
     } // submitted SonarQube taskId is automatically attached to the pipeline context
