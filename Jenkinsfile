@@ -4,7 +4,7 @@ node {
   }
   stage('SonarQube analysis') {
     def scannerHome = tool '4.2.0';
-    withSonarQubeEnv('SonarCloud') {
+    withSonarQubeEnv(installation: 'SonarCloud', credentialsId: 'customCredentialsId') {
       sh "${scannerHome}/bin/sonar-scanner -X"
     } // submitted SonarQube taskId is automatically attached to the pipeline context
   }
