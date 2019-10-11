@@ -13,7 +13,8 @@ workflows:
       - build
       - sonar/scan:
           context: sonarcloud
-          requires: build
+          requires: 
+            - build
 
 
 
