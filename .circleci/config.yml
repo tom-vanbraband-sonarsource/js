@@ -5,14 +5,14 @@ jobs:
       - image: node:latest
     steps:
       - checkout
-      - sonar/scan:
 orbs:
-  sonar: sonarsource/sonarcloud@dev:alpha-ngrok
+  sonar: sonarsource/sonarcloud@dev:orb2.0
 workflows:
   main:
     jobs:
-      - build:
-          context: sonarcloud
+      - build
+      - sonar/scan:
+          context: SonarCloud
 
 
 
