@@ -11,7 +11,7 @@ jobs:
           command: |
             set -e
             VERSION=4.1.0.1829
-            SONAR_TOKEN=$<<parameters.sonar_token_variable_name>>
+            SONAR_TOKEN=e7d6d8a8e528e6f813c08cc110d3efbc73253afa
             SCANNER_DIRECTORY=/tmp/cache/scanner
             export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
             OS="linux"
