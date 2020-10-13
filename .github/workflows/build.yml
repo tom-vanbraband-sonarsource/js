@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - tom-vanbraband-sonarsource-patch-10
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
