@@ -14,7 +14,7 @@ pipeline {
                 scannerHome = tool 'SonarQubeScanner'
             }
             steps {
-                withSonarQubeEnv(installation: 'SonarCloud', credentialsId: 'customCredentialsId') {
+                withSonarQubeEnv(installationName: 'SonarCloud', credentialsId: 'customCredentialsId') {
                     sh "${scannerHome}/bin/sonar-scanner -X"
                 } // submitted SonarQube taskId is automatically attached to the pipeline context
             }
