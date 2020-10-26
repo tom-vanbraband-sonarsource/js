@@ -1,10 +1,13 @@
 node {
+  tools {
+      jdk "jdk-1.8.101"
+  }
   stage('SCM') {
     git 'https://github.com/tom-vanbraband-sonarsource/js-dummy-project.git'
   }
   stage('SonarQube analysis') {
     tools {
-      jdk "jdk-1.8.101"
+        jdk "jdk-1.8.101"
     }
     def scannerHome = tool '4.2.0';
     withSonarQubeEnv(installation: 'SonarCloud', credentialsId: 'customCredentialsId') {
