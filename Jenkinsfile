@@ -11,7 +11,7 @@ pipeline {
         }
         stage('SonarQube analysis') {
             environment {
-                scannerHome = tool 'SonarQubeScanner'
+                scannerHome = tool '4.2.0'
             }
             steps {
                 withSonarQubeEnv(installationName: 'SonarCloud', credentialsId: 'customCredentialsId') {
