@@ -10,14 +10,38 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      # 
-      # Run the Sonar scan
-      # 
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v1.5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+         # 
+         # Checkout the repository content
+         # 
+         - name: Checkout
+           uses: actions/checkout@v2
+           with:
+             # Disabling shallow clone 
+             fetch-depth: 0
+         # 
+         # Setup Java JDK
+         # 
+         - name: Setup JDK
+           uses: actions/setup-java@v1
+           with:
+             java-version: '11'
+         # 
+         # Setup Node.js (for Sonar)
+         # 
+         - name: Setup Node.js
+           uses: actions/setup-node@v2    
+           with:
+             node-version: '12'
+         # 
+         # Run the Sonar scan
+         # 
+         - name: SonarCloud Scan
+           uses: sonarsource/sonarcloud-github-action@v1.4
+           env:
+             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+         # 
+         # Print out the artifacts list
+         # 
+         - name: Print artifacts
+           run: ls -R ./dist
