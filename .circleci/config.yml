@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - sonarcloud/scan:
-        - project_root: 'sub-project'
+          project_root: 'sub-project'
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@dev:alpha
