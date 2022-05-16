@@ -6,7 +6,8 @@ jobs:
       - image: 'node:latest'
     steps:
       - checkout
-      - sonarcloud/scan
+      - sonarcloud/scan:
+        - project_root: 'sub-project'
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@dev:alpha
