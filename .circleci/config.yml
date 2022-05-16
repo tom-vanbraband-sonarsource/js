@@ -10,6 +10,7 @@ jobs:
 
 orbs:
   sonarcloud: sonarsource/sonarcloud@dev:alpha
+  
 
 workflows:
   main:
