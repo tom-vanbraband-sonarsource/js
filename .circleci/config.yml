@@ -6,30 +6,10 @@ jobs:
       - image: 'node:latest'
     steps:
       - checkout
-      - run:
-          name: SonarCloud
-          command: |
-            set -e
-            VERSION=4.1.0.1829
-            SONAR_TOKEN=e7d6d8a8e528e6f813c08cc110d3efbc73253afa
-            SCANNER_DIRECTORY=/tmp/cache/scanner
-            export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
-            OS="linux"
-            mkdir -p /tmp/cache/scanner
-            echo $SONAR_USER_HOME
-            if [[ ! -x "$SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner" ]]; then
-              curl -Ol https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION-$OS.zip
-              unzip -qq -o sonar-scanner-cli-$VERSION-$OS.zip -d $SCANNER_DIRECTORY
-            fi
-        
-            chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
-            chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
-            $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
-          environment:
-            SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://tomvb.eu.ngrok.io"}'
+      - sonarcloud/scan
 
 orbs:
-  sonarcloud: sonarsource/sonarcloud@1.0.1
+  sonarcloud: sonarsource/sonarcloud@dev
 
 workflows:
   main:
