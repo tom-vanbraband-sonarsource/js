@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - trigger-new-pr-5
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
