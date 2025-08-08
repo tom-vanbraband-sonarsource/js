@@ -24,7 +24,15 @@
 ;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+function calculate(value) {
+  if (value > 0) {
+    return value * 2;
+  } else {
+    return value / 2;
+  }
+  // This line is unreachable and will be flagged by SonarQube
+  console.log("Calculation complete."); 
+}
 
 
 ;;;;;;;;;;;;
