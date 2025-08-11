@@ -34,6 +34,11 @@ function calculate(value) {
   console.log("Calculation complete."); 
 }
 
+function validateInput(input) {
+  const regex = /(a+)+s/; // Vulnerable regex
+  return regex.test(input);
+}
+
 
 ;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
