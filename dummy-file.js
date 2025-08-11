@@ -39,6 +39,13 @@ function validateInput(input) {
   return regex.test(input);
 }
 
+// In a Node.js Express application
+app.get('/search', (req, res) => {
+  const query = req.query.q;
+  // Vulnerable: Directly embedding user input into the HTML response
+  res.send(`<h1>Search results for: ${query}</h1>`);
+});
+
 
 ;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
