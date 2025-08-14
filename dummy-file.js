@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
+;;;
+
 app.get('/images', (req, res) => {
   const filename = req.query.filename; // User-controlled input
   const imagePath = path.join(__dirname, 'images', filename); // Vulnerable concatenation
