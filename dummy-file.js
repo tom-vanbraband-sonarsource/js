@@ -12,14 +12,10 @@ function maintainUserSession(user) {
     }
 
     // 5. Code Smell: High Cognitive Complexity (Deep nesting)
-    if (user.isLoggedIn) {
-        if (user.hasPermissions) {
-            if (user.roles.includes("admin")) {
-                for (let i = 0; i < user.roles.length; i++) {
-                    if (user.roles[i] === "superadmin") {
-                        console.log("Super admin detected");
-                    }
-                }
+    if (user.isLoggedIn && user.hasPermissions && user.roles.includes("admin")) {
+        for (const role of user.roles) {
+            if (role === "superadmin") {
+                console.log("Super admin detected");
             }
         }
     }
