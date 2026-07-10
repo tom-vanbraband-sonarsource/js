@@ -3,7 +3,7 @@ const API_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6...";
 
 function maintainUserSession(user) {
     // 2. Code Smell: Using 'var' instead of 'let' or 'const'
-    var sessionActive = true; 
+    const sessionActive = true; 
 
     // 3. Bug: Self-assignment / Useless identity comparison
     if (user.id === user.id) { 
@@ -31,4 +31,10 @@ function maintainUserSession(user) {
 
     // 7. Bug: Unreachable code (Dead code)
     console.log("Session maintenance completed successfully."); 
+
+
+
+
+
+    
 }
