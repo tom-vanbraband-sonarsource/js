@@ -1015,6 +1015,7 @@ module.exports = {
   processOrderBatch1,
   processOrderBatch2,
   processOrderBatch3,
+  calculateGlobalShippingTaxAndDiscountMatrix,
   reportGeneratorA,
   reportGeneratorB,
   reportGeneratorC,
@@ -1917,3 +1918,729 @@ function auditLogC(action, user, resource, oldValue, newValue, timestamp, ipAddr
   console.log("AUDIT: " + JSON.stringify(entry));
   return entry;
 }
+
+// ---- Deeply nested regional shipping/tax/discount calculator ----
+
+function calculateGlobalShippingTaxAndDiscountMatrix(order, customer, region, promoCode, isHoliday, warehouseDistanceKm, currency) {
+  var breakdown = {};
+  var shippingCost = 0;
+  var taxAmount = 0;
+  var discountAmount = 0;
+  var finalTotal = 0;
+  var messages = [];
+
+  if (region == "NA") {
+    messages.push("Processing order for region: North America");
+    breakdown.baseTaxRate = 0.0;
+    if (customer.tier == "standard") {
+      messages.push("Customer tier: standard in North America");
+      breakdown.tierDiscount = 0.0;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for standard/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for standard/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for standard/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for standard/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+    else if (customer.tier == "premium") {
+      messages.push("Customer tier: premium in North America");
+      breakdown.tierDiscount = 0.05;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for premium/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for premium/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for premium/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for premium/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+    else if (customer.tier == "enterprise") {
+      messages.push("Customer tier: enterprise in North America");
+      breakdown.tierDiscount = 0.12;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for enterprise/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for enterprise/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for enterprise/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for enterprise/North America");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.0 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+  }
+  else if (region == "EU") {
+    messages.push("Processing order for region: Europe");
+    breakdown.baseTaxRate = 0.2;
+    if (customer.tier == "standard") {
+      messages.push("Customer tier: standard in Europe");
+      breakdown.tierDiscount = 0.0;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for standard/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for standard/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for standard/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for standard/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+    else if (customer.tier == "premium") {
+      messages.push("Customer tier: premium in Europe");
+      breakdown.tierDiscount = 0.05;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for premium/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for premium/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for premium/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for premium/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+    else if (customer.tier == "enterprise") {
+      messages.push("Customer tier: enterprise in Europe");
+      breakdown.tierDiscount = 0.12;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for enterprise/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for enterprise/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for enterprise/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for enterprise/Europe");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.2 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+  }
+  else if (region == "APAC") {
+    messages.push("Processing order for region: Asia Pacific");
+    breakdown.baseTaxRate = 0.08;
+    if (customer.tier == "standard") {
+      messages.push("Customer tier: standard in Asia Pacific");
+      breakdown.tierDiscount = 0.0;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for standard/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for standard/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for standard/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for standard/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 1.0 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.0);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "standard") {
+          discountAmount = order.total * 0.20 * 0.5;
+          messages.push("Promo SAVE20 applied for standard");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+    else if (customer.tier == "premium") {
+      messages.push("Customer tier: premium in Asia Pacific");
+      breakdown.tierDiscount = 0.05;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for premium/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for premium/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for premium/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for premium/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.9 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.05);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "premium") {
+          discountAmount = order.total * 0.20 * 0.55;
+          messages.push("Promo SAVE20 applied for premium");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+    else if (customer.tier == "enterprise") {
+      messages.push("Customer tier: enterprise in Asia Pacific");
+      breakdown.tierDiscount = 0.12;
+      if (order.total >= 0 && order.total < 100) {
+        messages.push("Order bracket: flat rate for enterprise/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 1.0;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for flat rate");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 0) {
+          discountAmount = order.total * 0.10 * 1.0;
+          messages.push("Promo SAVE10 applied in flat rate");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 100 && order.total < 500) {
+        messages.push("Order bracket: volume tier 1 for enterprise/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.9;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 1");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 100) {
+          discountAmount = order.total * 0.10 * 0.9;
+          messages.push("Promo SAVE10 applied in volume tier 1");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 500 && order.total < 2000) {
+        messages.push("Order bracket: volume tier 2 for enterprise/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.75;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 2");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 500) {
+          discountAmount = order.total * 0.10 * 0.75;
+          messages.push("Promo SAVE10 applied in volume tier 2");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+      else if (order.total >= 2000) {
+        messages.push("Order bracket: volume tier 3 for enterprise/Asia Pacific");
+        shippingCost = (order.total * 0.02 + warehouseDistanceKm * 0.01) * 0.75 * 0.6;
+        if (isHoliday) {
+          shippingCost = shippingCost * 1.15;
+          messages.push("Holiday surcharge applied for volume tier 3");
+        }
+        taxAmount = order.total * 0.08 * (1 - 0.12);
+        if (promoCode == "SAVE10" && order.total > 2000) {
+          discountAmount = order.total * 0.10 * 0.6;
+          messages.push("Promo SAVE10 applied in volume tier 3");
+        } else if (promoCode == "SAVE20" && customer.tier == "enterprise") {
+          discountAmount = order.total * 0.20 * 0.62;
+          messages.push("Promo SAVE20 applied for enterprise");
+        } else {
+          discountAmount = 0;
+        }
+      }
+    }
+  }
+  else {
+    messages.push("Unknown region, applying default rates");
+    breakdown.baseTaxRate = 0.15;
+    shippingCost = order.total * 0.05;
+    taxAmount = order.total * 0.15;
+    discountAmount = 0;
+  }
+
+  finalTotal = order.total + shippingCost + taxAmount - discountAmount;
+  breakdown.shippingCost = shippingCost;
+  breakdown.taxAmount = taxAmount;
+  breakdown.discountAmount = discountAmount;
+  breakdown.finalTotal = finalTotal;
+  breakdown.messages = messages;
+  breakdown.currency = currency || "USD";
+  console.log("calculateGlobalShippingTaxAndDiscountMatrix result: " + JSON.stringify(breakdown));
+  return breakdown;
+}
+
