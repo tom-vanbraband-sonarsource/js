@@ -1011,5 +1011,909 @@ module.exports = {
   doMoreWork,
   initializeApplication,
   legacyProcessor,
-  alwaysTrueConditions
+  alwaysTrueConditions,
+  processOrderBatch1,
+  processOrderBatch2,
+  processOrderBatch3,
+  reportGeneratorA,
+  reportGeneratorB,
+  reportGeneratorC,
+  computeStatisticsA,
+  computeStatisticsB,
+  computeStatisticsC,
+  renderWidgetA,
+  renderWidgetB,
+  renderWidgetC,
+  handleEventA,
+  handleEventB,
+  handleEventC,
+  transformDataA,
+  transformDataB,
+  transformDataC,
+  syncRecordsA,
+  syncRecordsB,
+  syncRecordsC,
+  auditLogA,
+  auditLogB,
+  auditLogC
 };
+
+// ---- More duplicated order batch processing ----
+
+function processOrderBatch1(orders) {
+  var results = [];
+  for (var i = 0; i < orders.length; i++) {
+    var order = orders[i];
+    var processed = {};
+    processed.id = order.id;
+    processed.status = "processing";
+    if (order.total > 1000) {
+      processed.priority = "high";
+    } else if (order.total > 500) {
+      processed.priority = "medium";
+    } else {
+      processed.priority = "low";
+    }
+    if (order.customerId == null || order.customerId == "") {
+      processed.error = "Missing customer ID";
+      processed.status = "failed";
+    }
+    if (order.items == null || order.items.length == 0) {
+      processed.error = "No items";
+      processed.status = "failed";
+    }
+    if (order.shippingAddress == null) {
+      processed.error = "Missing shipping address";
+      processed.status = "failed";
+    }
+    if (processed.status != "failed") {
+      processed.status = "completed";
+      processed.completedAt = new Date().toISOString();
+    }
+    console.log("Processed order " + order.id + " with status " + processed.status);
+    results.push(processed);
+  }
+  return results;
+}
+
+function processOrderBatch2(orders) {
+  var results = [];
+  for (var i = 0; i < orders.length; i++) {
+    var order = orders[i];
+    var processed = {};
+    processed.id = order.id;
+    processed.status = "processing";
+    if (order.total > 1000) {
+      processed.priority = "high";
+    } else if (order.total > 500) {
+      processed.priority = "medium";
+    } else {
+      processed.priority = "low";
+    }
+    if (order.customerId == null || order.customerId == "") {
+      processed.error = "Missing customer ID";
+      processed.status = "failed";
+    }
+    if (order.items == null || order.items.length == 0) {
+      processed.error = "No items";
+      processed.status = "failed";
+    }
+    if (order.shippingAddress == null) {
+      processed.error = "Missing shipping address";
+      processed.status = "failed";
+    }
+    if (processed.status != "failed") {
+      processed.status = "completed";
+      processed.completedAt = new Date().toISOString();
+    }
+    console.log("Processed order " + order.id + " with status " + processed.status);
+    results.push(processed);
+  }
+  return results;
+}
+
+function processOrderBatch3(orders) {
+  var results = [];
+  for (var i = 0; i < orders.length; i++) {
+    var order = orders[i];
+    var processed = {};
+    processed.id = order.id;
+    processed.status = "processing";
+    if (order.total > 1000) {
+      processed.priority = "high";
+    } else if (order.total > 500) {
+      processed.priority = "medium";
+    } else {
+      processed.priority = "low";
+    }
+    if (order.customerId == null || order.customerId == "") {
+      processed.error = "Missing customer ID";
+      processed.status = "failed";
+    }
+    if (order.items == null || order.items.length == 0) {
+      processed.error = "No items";
+      processed.status = "failed";
+    }
+    if (order.shippingAddress == null) {
+      processed.error = "Missing shipping address";
+      processed.status = "failed";
+    }
+    if (processed.status != "failed") {
+      processed.status = "completed";
+      processed.completedAt = new Date().toISOString();
+    }
+    console.log("Processed order " + order.id + " with status " + processed.status);
+    results.push(processed);
+  }
+  return results;
+}
+
+// ---- Duplicated report generators ----
+
+function reportGeneratorA(data, title, subtitle, author, date, format, includeCharts, includeTables, includeRawData, footer) {
+  var report = "";
+  report = report + "=== " + title + " ===\n";
+  report = report + subtitle + "\n";
+  report = report + "Author: " + author + "\n";
+  report = report + "Date: " + date + "\n";
+  report = report + "Format: " + format + "\n";
+  report = report + "\n";
+  if (data == null || data.length == 0) {
+    report = report + "No data available.\n";
+    return report;
+  }
+  for (var i = 0; i < data.length; i++) {
+    var row = data[i];
+    if (row == null) continue;
+    report = report + "Row " + (i + 1) + ": ";
+    if (row.label != null) report = report + row.label + " | ";
+    if (row.value != null) report = report + row.value + " | ";
+    if (row.category != null) report = report + row.category + " | ";
+    if (row.subcategory != null) report = report + row.subcategory + " | ";
+    if (row.region != null) report = report + row.region;
+    report = report + "\n";
+  }
+  if (includeTables == true) {
+    report = report + "\n--- TABLE ---\n";
+    for (var j = 0; j < data.length; j++) {
+      report = report + JSON.stringify(data[j]) + "\n";
+    }
+  }
+  if (includeCharts == true) {
+    report = report + "\n--- CHARTS ---\n";
+    report = report + "[chart data would go here]\n";
+  }
+  if (includeRawData == true) {
+    report = report + "\n--- RAW DATA ---\n";
+    report = report + JSON.stringify(data) + "\n";
+  }
+  report = report + "\n" + footer + "\n";
+  console.log("Report generated: " + title);
+  return report;
+}
+
+function reportGeneratorB(data, title, subtitle, author, date, format, includeCharts, includeTables, includeRawData, footer) {
+  var report = "";
+  report = report + "=== " + title + " ===\n";
+  report = report + subtitle + "\n";
+  report = report + "Author: " + author + "\n";
+  report = report + "Date: " + date + "\n";
+  report = report + "Format: " + format + "\n";
+  report = report + "\n";
+  if (data == null || data.length == 0) {
+    report = report + "No data available.\n";
+    return report;
+  }
+  for (var i = 0; i < data.length; i++) {
+    var row = data[i];
+    if (row == null) continue;
+    report = report + "Row " + (i + 1) + ": ";
+    if (row.label != null) report = report + row.label + " | ";
+    if (row.value != null) report = report + row.value + " | ";
+    if (row.category != null) report = report + row.category + " | ";
+    if (row.subcategory != null) report = report + row.subcategory + " | ";
+    if (row.region != null) report = report + row.region;
+    report = report + "\n";
+  }
+  if (includeTables == true) {
+    report = report + "\n--- TABLE ---\n";
+    for (var j = 0; j < data.length; j++) {
+      report = report + JSON.stringify(data[j]) + "\n";
+    }
+  }
+  if (includeCharts == true) {
+    report = report + "\n--- CHARTS ---\n";
+    report = report + "[chart data would go here]\n";
+  }
+  if (includeRawData == true) {
+    report = report + "\n--- RAW DATA ---\n";
+    report = report + JSON.stringify(data) + "\n";
+  }
+  report = report + "\n" + footer + "\n";
+  console.log("Report generated: " + title);
+  return report;
+}
+
+function reportGeneratorC(data, title, subtitle, author, date, format, includeCharts, includeTables, includeRawData, footer) {
+  var report = "";
+  report = report + "=== " + title + " ===\n";
+  report = report + subtitle + "\n";
+  report = report + "Author: " + author + "\n";
+  report = report + "Date: " + date + "\n";
+  report = report + "Format: " + format + "\n";
+  report = report + "\n";
+  if (data == null || data.length == 0) {
+    report = report + "No data available.\n";
+    return report;
+  }
+  for (var i = 0; i < data.length; i++) {
+    var row = data[i];
+    if (row == null) continue;
+    report = report + "Row " + (i + 1) + ": ";
+    if (row.label != null) report = report + row.label + " | ";
+    if (row.value != null) report = report + row.value + " | ";
+    if (row.category != null) report = report + row.category + " | ";
+    if (row.subcategory != null) report = report + row.subcategory + " | ";
+    if (row.region != null) report = report + row.region;
+    report = report + "\n";
+  }
+  if (includeTables == true) {
+    report = report + "\n--- TABLE ---\n";
+    for (var j = 0; j < data.length; j++) {
+      report = report + JSON.stringify(data[j]) + "\n";
+    }
+  }
+  if (includeCharts == true) {
+    report = report + "\n--- CHARTS ---\n";
+    report = report + "[chart data would go here]\n";
+  }
+  if (includeRawData == true) {
+    report = report + "\n--- RAW DATA ---\n";
+    report = report + JSON.stringify(data) + "\n";
+  }
+  report = report + "\n" + footer + "\n";
+  console.log("Report generated: " + title);
+  return report;
+}
+
+// ---- Duplicated statistics computation ----
+
+function computeStatisticsA(values) {
+  if (values == null || values.length == 0) return null;
+  var sum = 0;
+  var min = values[0];
+  var max = values[0];
+  for (var i = 0; i < values.length; i++) {
+    sum = sum + values[i];
+    if (values[i] < min) min = values[i];
+    if (values[i] > max) max = values[i];
+  }
+  var mean = sum / values.length;
+  var variance = 0;
+  for (var j = 0; j < values.length; j++) {
+    variance = variance + (values[j] - mean) * (values[j] - mean);
+  }
+  variance = variance / values.length;
+  var stddev = Math.sqrt(variance);
+  var sorted = values.slice().sort(function(a, b) { return a - b; });
+  var median;
+  if (sorted.length % 2 == 0) {
+    median = (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+  } else {
+    median = sorted[Math.floor(sorted.length / 2)];
+  }
+  console.log("min=" + min + " max=" + max + " mean=" + mean + " stddev=" + stddev + " median=" + median);
+  return { sum: sum, min: min, max: max, mean: mean, variance: variance, stddev: stddev, median: median };
+}
+
+function computeStatisticsB(values) {
+  if (values == null || values.length == 0) return null;
+  var sum = 0;
+  var min = values[0];
+  var max = values[0];
+  for (var i = 0; i < values.length; i++) {
+    sum = sum + values[i];
+    if (values[i] < min) min = values[i];
+    if (values[i] > max) max = values[i];
+  }
+  var mean = sum / values.length;
+  var variance = 0;
+  for (var j = 0; j < values.length; j++) {
+    variance = variance + (values[j] - mean) * (values[j] - mean);
+  }
+  variance = variance / values.length;
+  var stddev = Math.sqrt(variance);
+  var sorted = values.slice().sort(function(a, b) { return a - b; });
+  var median;
+  if (sorted.length % 2 == 0) {
+    median = (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+  } else {
+    median = sorted[Math.floor(sorted.length / 2)];
+  }
+  console.log("min=" + min + " max=" + max + " mean=" + mean + " stddev=" + stddev + " median=" + median);
+  return { sum: sum, min: min, max: max, mean: mean, variance: variance, stddev: stddev, median: median };
+}
+
+function computeStatisticsC(values) {
+  if (values == null || values.length == 0) return null;
+  var sum = 0;
+  var min = values[0];
+  var max = values[0];
+  for (var i = 0; i < values.length; i++) {
+    sum = sum + values[i];
+    if (values[i] < min) min = values[i];
+    if (values[i] > max) max = values[i];
+  }
+  var mean = sum / values.length;
+  var variance = 0;
+  for (var j = 0; j < values.length; j++) {
+    variance = variance + (values[j] - mean) * (values[j] - mean);
+  }
+  variance = variance / values.length;
+  var stddev = Math.sqrt(variance);
+  var sorted = values.slice().sort(function(a, b) { return a - b; });
+  var median;
+  if (sorted.length % 2 == 0) {
+    median = (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
+  } else {
+    median = sorted[Math.floor(sorted.length / 2)];
+  }
+  console.log("min=" + min + " max=" + max + " mean=" + mean + " stddev=" + stddev + " median=" + median);
+  return { sum: sum, min: min, max: max, mean: mean, variance: variance, stddev: stddev, median: median };
+}
+
+// ---- Duplicated widget renderers ----
+
+function renderWidgetA(container, title, data, width, height, theme, showLegend, showTooltip, showGrid, animated) {
+  var html = "";
+  html = html + "<div class='widget' style='width:" + width + "px;height:" + height + "px'>";
+  html = html + "<div class='widget-header'>" + title + "</div>";
+  if (theme == "dark") {
+    html = html + "<div class='widget-body dark'>";
+  } else if (theme == "light") {
+    html = html + "<div class='widget-body light'>";
+  } else {
+    html = html + "<div class='widget-body'>";
+  }
+  if (data == null || data.length == 0) {
+    html = html + "<p>No data</p>";
+  } else {
+    html = html + "<ul>";
+    for (var i = 0; i < data.length; i++) {
+      html = html + "<li>" + data[i].label + ": " + data[i].value + "</li>";
+    }
+    html = html + "</ul>";
+    if (showLegend == true) {
+      html = html + "<div class='legend'>";
+      for (var j = 0; j < data.length; j++) {
+        html = html + "<span class='legend-item'>" + data[j].label + "</span>";
+      }
+      html = html + "</div>";
+    }
+    if (showGrid == true) {
+      html = html + "<div class='grid'></div>";
+    }
+    if (showTooltip == true) {
+      html = html + "<div class='tooltip'></div>";
+    }
+  }
+  html = html + "</div></div>";
+  if (animated == true) {
+    console.log("Animating widget: " + title);
+  }
+  if (container != null) {
+    container.innerHTML = html;
+  }
+  return html;
+}
+
+function renderWidgetB(container, title, data, width, height, theme, showLegend, showTooltip, showGrid, animated) {
+  var html = "";
+  html = html + "<div class='widget' style='width:" + width + "px;height:" + height + "px'>";
+  html = html + "<div class='widget-header'>" + title + "</div>";
+  if (theme == "dark") {
+    html = html + "<div class='widget-body dark'>";
+  } else if (theme == "light") {
+    html = html + "<div class='widget-body light'>";
+  } else {
+    html = html + "<div class='widget-body'>";
+  }
+  if (data == null || data.length == 0) {
+    html = html + "<p>No data</p>";
+  } else {
+    html = html + "<ul>";
+    for (var i = 0; i < data.length; i++) {
+      html = html + "<li>" + data[i].label + ": " + data[i].value + "</li>";
+    }
+    html = html + "</ul>";
+    if (showLegend == true) {
+      html = html + "<div class='legend'>";
+      for (var j = 0; j < data.length; j++) {
+        html = html + "<span class='legend-item'>" + data[j].label + "</span>";
+      }
+      html = html + "</div>";
+    }
+    if (showGrid == true) {
+      html = html + "<div class='grid'></div>";
+    }
+    if (showTooltip == true) {
+      html = html + "<div class='tooltip'></div>";
+    }
+  }
+  html = html + "</div></div>";
+  if (animated == true) {
+    console.log("Animating widget: " + title);
+  }
+  if (container != null) {
+    container.innerHTML = html;
+  }
+  return html;
+}
+
+function renderWidgetC(container, title, data, width, height, theme, showLegend, showTooltip, showGrid, animated) {
+  var html = "";
+  html = html + "<div class='widget' style='width:" + width + "px;height:" + height + "px'>";
+  html = html + "<div class='widget-header'>" + title + "</div>";
+  if (theme == "dark") {
+    html = html + "<div class='widget-body dark'>";
+  } else if (theme == "light") {
+    html = html + "<div class='widget-body light'>";
+  } else {
+    html = html + "<div class='widget-body'>";
+  }
+  if (data == null || data.length == 0) {
+    html = html + "<p>No data</p>";
+  } else {
+    html = html + "<ul>";
+    for (var i = 0; i < data.length; i++) {
+      html = html + "<li>" + data[i].label + ": " + data[i].value + "</li>";
+    }
+    html = html + "</ul>";
+    if (showLegend == true) {
+      html = html + "<div class='legend'>";
+      for (var j = 0; j < data.length; j++) {
+        html = html + "<span class='legend-item'>" + data[j].label + "</span>";
+      }
+      html = html + "</div>";
+    }
+    if (showGrid == true) {
+      html = html + "<div class='grid'></div>";
+    }
+    if (showTooltip == true) {
+      html = html + "<div class='tooltip'></div>";
+    }
+  }
+  html = html + "</div></div>";
+  if (animated == true) {
+    console.log("Animating widget: " + title);
+  }
+  if (container != null) {
+    container.innerHTML = html;
+  }
+  return html;
+}
+
+// ---- Duplicated event handlers ----
+
+function handleEventA(event, context, user, permissions, config, logger) {
+  console.log("handleEventA: " + event.type);
+  if (event == null) return;
+  if (event.type == null || event.type == "") return;
+  if (user == null) { logger.error("No user"); return; }
+  if (permissions == null) { logger.error("No permissions"); return; }
+  if (!permissions.includes(event.type)) { logger.warn("Permission denied for " + event.type); return; }
+  var payload = event.payload;
+  if (payload == null) { logger.warn("Empty payload"); return; }
+  if (event.type == "click") {
+    if (payload.target == null) return;
+    if (payload.target.id == "submit") {
+      context.submitCount = (context.submitCount || 0) + 1;
+      logger.log("Submit clicked by " + user.id);
+    } else if (payload.target.id == "cancel") {
+      context.cancelCount = (context.cancelCount || 0) + 1;
+      logger.log("Cancel clicked by " + user.id);
+    } else {
+      context.otherClickCount = (context.otherClickCount || 0) + 1;
+    }
+  } else if (event.type == "keydown") {
+    if (payload.key == "Enter") {
+      context.enterCount = (context.enterCount || 0) + 1;
+    } else if (payload.key == "Escape") {
+      context.escapeCount = (context.escapeCount || 0) + 1;
+    }
+  } else if (event.type == "change") {
+    context.changeCount = (context.changeCount || 0) + 1;
+    logger.log("Change event on " + (payload.target ? payload.target.name : "unknown"));
+  } else {
+    logger.warn("Unhandled event type: " + event.type);
+  }
+  if (config.trackEvents == true) {
+    console.log("TRACK: " + JSON.stringify({ type: event.type, userId: user.id, ts: new Date().toISOString() }));
+  }
+}
+
+function handleEventB(event, context, user, permissions, config, logger) {
+  console.log("handleEventB: " + event.type);
+  if (event == null) return;
+  if (event.type == null || event.type == "") return;
+  if (user == null) { logger.error("No user"); return; }
+  if (permissions == null) { logger.error("No permissions"); return; }
+  if (!permissions.includes(event.type)) { logger.warn("Permission denied for " + event.type); return; }
+  var payload = event.payload;
+  if (payload == null) { logger.warn("Empty payload"); return; }
+  if (event.type == "click") {
+    if (payload.target == null) return;
+    if (payload.target.id == "submit") {
+      context.submitCount = (context.submitCount || 0) + 1;
+      logger.log("Submit clicked by " + user.id);
+    } else if (payload.target.id == "cancel") {
+      context.cancelCount = (context.cancelCount || 0) + 1;
+      logger.log("Cancel clicked by " + user.id);
+    } else {
+      context.otherClickCount = (context.otherClickCount || 0) + 1;
+    }
+  } else if (event.type == "keydown") {
+    if (payload.key == "Enter") {
+      context.enterCount = (context.enterCount || 0) + 1;
+    } else if (payload.key == "Escape") {
+      context.escapeCount = (context.escapeCount || 0) + 1;
+    }
+  } else if (event.type == "change") {
+    context.changeCount = (context.changeCount || 0) + 1;
+    logger.log("Change event on " + (payload.target ? payload.target.name : "unknown"));
+  } else {
+    logger.warn("Unhandled event type: " + event.type);
+  }
+  if (config.trackEvents == true) {
+    console.log("TRACK: " + JSON.stringify({ type: event.type, userId: user.id, ts: new Date().toISOString() }));
+  }
+}
+
+function handleEventC(event, context, user, permissions, config, logger) {
+  console.log("handleEventC: " + event.type);
+  if (event == null) return;
+  if (event.type == null || event.type == "") return;
+  if (user == null) { logger.error("No user"); return; }
+  if (permissions == null) { logger.error("No permissions"); return; }
+  if (!permissions.includes(event.type)) { logger.warn("Permission denied for " + event.type); return; }
+  var payload = event.payload;
+  if (payload == null) { logger.warn("Empty payload"); return; }
+  if (event.type == "click") {
+    if (payload.target == null) return;
+    if (payload.target.id == "submit") {
+      context.submitCount = (context.submitCount || 0) + 1;
+      logger.log("Submit clicked by " + user.id);
+    } else if (payload.target.id == "cancel") {
+      context.cancelCount = (context.cancelCount || 0) + 1;
+      logger.log("Cancel clicked by " + user.id);
+    } else {
+      context.otherClickCount = (context.otherClickCount || 0) + 1;
+    }
+  } else if (event.type == "keydown") {
+    if (payload.key == "Enter") {
+      context.enterCount = (context.enterCount || 0) + 1;
+    } else if (payload.key == "Escape") {
+      context.escapeCount = (context.escapeCount || 0) + 1;
+    }
+  } else if (event.type == "change") {
+    context.changeCount = (context.changeCount || 0) + 1;
+    logger.log("Change event on " + (payload.target ? payload.target.name : "unknown"));
+  } else {
+    logger.warn("Unhandled event type: " + event.type);
+  }
+  if (config.trackEvents == true) {
+    console.log("TRACK: " + JSON.stringify({ type: event.type, userId: user.id, ts: new Date().toISOString() }));
+  }
+}
+
+// ---- Duplicated data transformers ----
+
+function transformDataA(records, fieldMap, defaultValues, filters, sortKey, sortDir, limit, offset) {
+  if (records == null || records.length == 0) return [];
+  var result = [];
+  for (var i = 0; i < records.length; i++) {
+    var rec = records[i];
+    if (rec == null) continue;
+    var transformed = {};
+    var keys = Object.keys(fieldMap);
+    for (var k = 0; k < keys.length; k++) {
+      var srcKey = keys[k];
+      var dstKey = fieldMap[srcKey];
+      if (rec[srcKey] != null) {
+        transformed[dstKey] = rec[srcKey];
+      } else if (defaultValues != null && defaultValues[dstKey] != null) {
+        transformed[dstKey] = defaultValues[dstKey];
+      } else {
+        transformed[dstKey] = null;
+      }
+    }
+    var pass = true;
+    if (filters != null) {
+      for (var f = 0; f < filters.length; f++) {
+        var filter = filters[f];
+        if (filter.field != null && transformed[filter.field] != filter.value) {
+          pass = false;
+          break;
+        }
+      }
+    }
+    if (pass) result.push(transformed);
+  }
+  if (sortKey != null) {
+    result.sort(function(a, b) {
+      if (a[sortKey] < b[sortKey]) return sortDir == "desc" ? 1 : -1;
+      if (a[sortKey] > b[sortKey]) return sortDir == "desc" ? -1 : 1;
+      return 0;
+    });
+  }
+  if (offset != null && offset > 0) result = result.slice(offset);
+  if (limit != null && limit > 0) result = result.slice(0, limit);
+  console.log("transformDataA: " + result.length + " records");
+  return result;
+}
+
+function transformDataB(records, fieldMap, defaultValues, filters, sortKey, sortDir, limit, offset) {
+  if (records == null || records.length == 0) return [];
+  var result = [];
+  for (var i = 0; i < records.length; i++) {
+    var rec = records[i];
+    if (rec == null) continue;
+    var transformed = {};
+    var keys = Object.keys(fieldMap);
+    for (var k = 0; k < keys.length; k++) {
+      var srcKey = keys[k];
+      var dstKey = fieldMap[srcKey];
+      if (rec[srcKey] != null) {
+        transformed[dstKey] = rec[srcKey];
+      } else if (defaultValues != null && defaultValues[dstKey] != null) {
+        transformed[dstKey] = defaultValues[dstKey];
+      } else {
+        transformed[dstKey] = null;
+      }
+    }
+    var pass = true;
+    if (filters != null) {
+      for (var f = 0; f < filters.length; f++) {
+        var filter = filters[f];
+        if (filter.field != null && transformed[filter.field] != filter.value) {
+          pass = false;
+          break;
+        }
+      }
+    }
+    if (pass) result.push(transformed);
+  }
+  if (sortKey != null) {
+    result.sort(function(a, b) {
+      if (a[sortKey] < b[sortKey]) return sortDir == "desc" ? 1 : -1;
+      if (a[sortKey] > b[sortKey]) return sortDir == "desc" ? -1 : 1;
+      return 0;
+    });
+  }
+  if (offset != null && offset > 0) result = result.slice(offset);
+  if (limit != null && limit > 0) result = result.slice(0, limit);
+  console.log("transformDataB: " + result.length + " records");
+  return result;
+}
+
+function transformDataC(records, fieldMap, defaultValues, filters, sortKey, sortDir, limit, offset) {
+  if (records == null || records.length == 0) return [];
+  var result = [];
+  for (var i = 0; i < records.length; i++) {
+    var rec = records[i];
+    if (rec == null) continue;
+    var transformed = {};
+    var keys = Object.keys(fieldMap);
+    for (var k = 0; k < keys.length; k++) {
+      var srcKey = keys[k];
+      var dstKey = fieldMap[srcKey];
+      if (rec[srcKey] != null) {
+        transformed[dstKey] = rec[srcKey];
+      } else if (defaultValues != null && defaultValues[dstKey] != null) {
+        transformed[dstKey] = defaultValues[dstKey];
+      } else {
+        transformed[dstKey] = null;
+      }
+    }
+    var pass = true;
+    if (filters != null) {
+      for (var f = 0; f < filters.length; f++) {
+        var filter = filters[f];
+        if (filter.field != null && transformed[filter.field] != filter.value) {
+          pass = false;
+          break;
+        }
+      }
+    }
+    if (pass) result.push(transformed);
+  }
+  if (sortKey != null) {
+    result.sort(function(a, b) {
+      if (a[sortKey] < b[sortKey]) return sortDir == "desc" ? 1 : -1;
+      if (a[sortKey] > b[sortKey]) return sortDir == "desc" ? -1 : 1;
+      return 0;
+    });
+  }
+  if (offset != null && offset > 0) result = result.slice(offset);
+  if (limit != null && limit > 0) result = result.slice(0, limit);
+  console.log("transformDataC: " + result.length + " records");
+  return result;
+}
+
+// ---- Duplicated sync routines ----
+
+function syncRecordsA(source, destination, keyField, conflictPolicy, dryRun, logger) {
+  var added = 0; var updated = 0; var skipped = 0; var errors = 0;
+  if (source == null || destination == null) { logger.error("null source or destination"); return; }
+  for (var i = 0; i < source.length; i++) {
+    var srcRec = source[i];
+    if (srcRec == null) { skipped++; continue; }
+    var key = srcRec[keyField];
+    if (key == null || key == "") { skipped++; continue; }
+    var found = false;
+    for (var j = 0; j < destination.length; j++) {
+      if (destination[j][keyField] == key) {
+        found = true;
+        if (conflictPolicy == "overwrite") {
+          if (!dryRun) destination[j] = srcRec;
+          updated++;
+        } else if (conflictPolicy == "skip") {
+          skipped++;
+        } else if (conflictPolicy == "error") {
+          logger.error("Conflict on key " + key);
+          errors++;
+        }
+        break;
+      }
+    }
+    if (!found) {
+      if (!dryRun) destination.push(srcRec);
+      added++;
+    }
+  }
+  logger.log("syncRecordsA: added=" + added + " updated=" + updated + " skipped=" + skipped + " errors=" + errors);
+}
+
+function syncRecordsB(source, destination, keyField, conflictPolicy, dryRun, logger) {
+  var added = 0; var updated = 0; var skipped = 0; var errors = 0;
+  if (source == null || destination == null) { logger.error("null source or destination"); return; }
+  for (var i = 0; i < source.length; i++) {
+    var srcRec = source[i];
+    if (srcRec == null) { skipped++; continue; }
+    var key = srcRec[keyField];
+    if (key == null || key == "") { skipped++; continue; }
+    var found = false;
+    for (var j = 0; j < destination.length; j++) {
+      if (destination[j][keyField] == key) {
+        found = true;
+        if (conflictPolicy == "overwrite") {
+          if (!dryRun) destination[j] = srcRec;
+          updated++;
+        } else if (conflictPolicy == "skip") {
+          skipped++;
+        } else if (conflictPolicy == "error") {
+          logger.error("Conflict on key " + key);
+          errors++;
+        }
+        break;
+      }
+    }
+    if (!found) {
+      if (!dryRun) destination.push(srcRec);
+      added++;
+    }
+  }
+  logger.log("syncRecordsB: added=" + added + " updated=" + updated + " skipped=" + skipped + " errors=" + errors);
+}
+
+function syncRecordsC(source, destination, keyField, conflictPolicy, dryRun, logger) {
+  var added = 0; var updated = 0; var skipped = 0; var errors = 0;
+  if (source == null || destination == null) { logger.error("null source or destination"); return; }
+  for (var i = 0; i < source.length; i++) {
+    var srcRec = source[i];
+    if (srcRec == null) { skipped++; continue; }
+    var key = srcRec[keyField];
+    if (key == null || key == "") { skipped++; continue; }
+    var found = false;
+    for (var j = 0; j < destination.length; j++) {
+      if (destination[j][keyField] == key) {
+        found = true;
+        if (conflictPolicy == "overwrite") {
+          if (!dryRun) destination[j] = srcRec;
+          updated++;
+        } else if (conflictPolicy == "skip") {
+          skipped++;
+        } else if (conflictPolicy == "error") {
+          logger.error("Conflict on key " + key);
+          errors++;
+        }
+        break;
+      }
+    }
+    if (!found) {
+      if (!dryRun) destination.push(srcRec);
+      added++;
+    }
+  }
+  logger.log("syncRecordsC: added=" + added + " updated=" + updated + " skipped=" + skipped + " errors=" + errors);
+}
+
+// ---- Duplicated audit log writers ----
+
+function auditLogA(action, user, resource, oldValue, newValue, timestamp, ipAddress, sessionId, requestId, metadata) {
+  var entry = {};
+  entry.action = action;
+  entry.userId = user != null ? user.id : null;
+  entry.userName = user != null ? user.name : null;
+  entry.userRole = user != null ? user.role : null;
+  entry.resourceType = resource != null ? resource.type : null;
+  entry.resourceId = resource != null ? resource.id : null;
+  entry.oldValue = oldValue;
+  entry.newValue = newValue;
+  entry.timestamp = timestamp || new Date().toISOString();
+  entry.ipAddress = ipAddress || "unknown";
+  entry.sessionId = sessionId || "unknown";
+  entry.requestId = requestId || "unknown";
+  entry.metadata = metadata || {};
+  if (action == null || action == "") {
+    console.error("auditLogA: action is required");
+    return null;
+  }
+  if (user == null) {
+    console.warn("auditLogA: no user provided for action " + action);
+  }
+  console.log("AUDIT: " + JSON.stringify(entry));
+  return entry;
+}
+
+function auditLogB(action, user, resource, oldValue, newValue, timestamp, ipAddress, sessionId, requestId, metadata) {
+  var entry = {};
+  entry.action = action;
+  entry.userId = user != null ? user.id : null;
+  entry.userName = user != null ? user.name : null;
+  entry.userRole = user != null ? user.role : null;
+  entry.resourceType = resource != null ? resource.type : null;
+  entry.resourceId = resource != null ? resource.id : null;
+  entry.oldValue = oldValue;
+  entry.newValue = newValue;
+  entry.timestamp = timestamp || new Date().toISOString();
+  entry.ipAddress = ipAddress || "unknown";
+  entry.sessionId = sessionId || "unknown";
+  entry.requestId = requestId || "unknown";
+  entry.metadata = metadata || {};
+  if (action == null || action == "") {
+    console.error("auditLogB: action is required");
+    return null;
+  }
+  if (user == null) {
+    console.warn("auditLogB: no user provided for action " + action);
+  }
+  console.log("AUDIT: " + JSON.stringify(entry));
+  return entry;
+}
+
+function auditLogC(action, user, resource, oldValue, newValue, timestamp, ipAddress, sessionId, requestId, metadata) {
+  var entry = {};
+  entry.action = action;
+  entry.userId = user != null ? user.id : null;
+  entry.userName = user != null ? user.name : null;
+  entry.userRole = user != null ? user.role : null;
+  entry.resourceType = resource != null ? resource.type : null;
+  entry.resourceId = resource != null ? resource.id : null;
+  entry.oldValue = oldValue;
+  entry.newValue = newValue;
+  entry.timestamp = timestamp || new Date().toISOString();
+  entry.ipAddress = ipAddress || "unknown";
+  entry.sessionId = sessionId || "unknown";
+  entry.requestId = requestId || "unknown";
+  entry.metadata = metadata || {};
+  if (action == null || action == "") {
+    console.error("auditLogC: action is required");
+    return null;
+  }
+  if (user == null) {
+    console.warn("auditLogC: no user provided for action " + action);
+  }
+  console.log("AUDIT: " + JSON.stringify(entry));
+  return entry;
+}
