@@ -6,7 +6,7 @@ function maintainUserSession(user) {
     var sessionActive = true; 
 
     // 3. Bug: Self-assignment / Useless identity comparison
-    if (user.id === user.id) { 
+    {
         // 4. Security Vulnerability: Use of 'eval' is dangerous
         eval("console.log('User validated: ' + user.name);");
     }
