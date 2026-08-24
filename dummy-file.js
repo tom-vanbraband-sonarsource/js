@@ -5,11 +5,9 @@ function maintainUserSession(user) {
     // 2. Code Smell: Using 'var' instead of 'let' or 'const'
     var sessionActive = true; 
 
-    // 3. Bug: Self-assignment / Useless identity comparison
-    if (user.id === user.id) { 
-        // 4. Security Vulnerability: Use of 'eval' is dangerous
-        eval("console.log('User validated: ' + user.name);");
-    }
+    // 3. Bug fixed: Removed redundant self-comparison
+    // 4. Security Vulnerability: Use of 'eval' is dangerous
+    eval("console.log('User validated: ' + user.name);");
 
     // 5. Code Smell: High Cognitive Complexity (Deep nesting)
     if (user.isLoggedIn) {
