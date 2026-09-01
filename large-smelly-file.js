@@ -429,22 +429,31 @@ function badSwitch(val) {
   switch (val) {
     case 1:
       result = 10;
+      break;
     case 2:
       result = 20;
+      break;
     case 3:
       result = 30;
+      break;
     case 4:
       result = 40;
+      break;
     case 5:
       result = 50;
+      break;
     case 6:
       result = 60;
+      break;
     case 7:
       result = 70;
+      break;
     case 8:
       result = 80;
+      break;
     case 9:
       result = 90;
+      break;
     case 10:
       result = 100;
   }
